@@ -27,9 +27,17 @@ public class Bank {
     private HashMap<String, Customer> bankCustomers = new HashMap<String, Customer>();
     private static String fileName;
 
+
+
+
     public Bank() {
         System.out.println("Bank()");
         initBank();
+    }
+    public Bank(String bankName, String bankAddress) {
+        this.bankName = bankName;
+        this.bankStreetAddress = bankAddress;
+        initBank();;
     }
 
     public void initBank() {
@@ -42,12 +50,6 @@ public class Bank {
         this.bankID = activePrefix + currentBankID;
         currentBankID++;
         fileName = bankID + ".json";
-    }
-
-    public Bank(String bankName, String bankAddress) {
-        this.bankName = bankName;
-        this.bankStreetAddress = bankAddress;
-        initBank();;
     }
 
     public void save() {
@@ -70,21 +72,25 @@ public class Bank {
         }
     }
 
-    public void deleteFile() {
-//        System.out.println("deleteFile()");
+    public static Bank retrieve(String bankID) {
+        Scanner fileScanner = null;
         try {
-            System.out.println("delete " + bankID + ".json");
-            File fileToDelete = new File(bankID + ".json");
-            System.out.println("Absolute: " + fileToDelete.getAbsolutePath());
-            boolean deleted = fileToDelete.delete();
-            if (deleted) {
-                System.out.println("\tsuccess");
-            } else {
-                System.out.println("\tunable to delete");
+            String fileToRetrieve = bankID + ".json";
+            fileScanner = new Scanner(new File(fileToRetrieve));
+            fileScanner.useDelimiter("\\Z"); // read the input until the "end of the input" delimiter
+            String fileContents = fileScanner.next();
+            JsonParser bankParser = new JsonParser();
+
+            Bank newBank = bankParser.parse(fileContents, Bank.class);
+            return newBank;
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+            // TODO Implement better exception handling here
+            return null;
+        } finally {
+            if (fileScanner != null) {
+                fileScanner.close();
             }
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            // TODO better exception handling here
         }
     }
 
@@ -111,27 +117,24 @@ public class Bank {
         return bankList;
     }
 
-    public static Bank retrieve(String bankID) {
-        Scanner fileScanner = null;
+    public void deleteFile() {
+//        System.out.println("deleteFile()");
         try {
-            String fileToRetrieve = bankID + ".json";
-            fileScanner = new Scanner(new File(fileToRetrieve));
-            fileScanner.useDelimiter("\\Z"); // read the input until the "end of the input" delimiter
-            String fileContents = fileScanner.next();
-            JsonParser bankParser = new JsonParser();
-
-            Bank newBank = bankParser.parse(fileContents, Bank.class);
-            return newBank;
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
-            // TODO Implement better exception handling here
-            return null;
-        } finally {
-            if (fileScanner != null) {
-                fileScanner.close();
+            System.out.println("delete " + bankID + ".json");
+            File fileToDelete = new File(bankID + ".json");
+            System.out.println("Absolute: " + fileToDelete.getAbsolutePath());
+            boolean deleted = fileToDelete.delete();
+            if (deleted) {
+                System.out.println("\tsuccess");
+            } else {
+                System.out.println("\tunable to delete");
             }
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            // TODO better exception handling here
         }
     }
+
 
     public void addCustomer(Customer customer) {
         System.out.println("addCustomer()");
@@ -151,6 +154,8 @@ public class Bank {
 
         return totalBalance;
     }
+
+
 
     public static int nextBankID() {
         return currentBankID++;
