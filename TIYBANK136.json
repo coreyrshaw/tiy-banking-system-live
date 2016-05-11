@@ -1,1 +1,1 @@
-{"bankCustomers":{},"bankID":"TIYBANK136","bankName":"Testing bank IDs","bankStreetAddress":"Somewhere over the rainbows","totalMoneyAtBank":0.0}
+{"bankCustomers":{"HH":{"bankAccounts":{},"emailAddress":"HH","firstName":"HHH","lastName":"HH","totalAccountBalance":0.0}},"bankID":"TIYBANK136","bankName":"Testing bank IDs","bankStreetAddress":"Somewhere over the rainbows","totalMoneyAtBank":0.0}
